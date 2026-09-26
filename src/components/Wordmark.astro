@@ -1,0 +1,13 @@
+---
+/** "TD" in bold Inter Tight, "Labs" in Instrument Serif italic. Links home. */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'>;
+
+const { class: className, ...attrs } = Astro.props;
+---
+
+<a href="/" class:list={['inline-flex items-baseline gap-1 text-xl leading-none', className]} {...attrs}>
+  <span class="font-sans font-bold tracking-tight">TD</span>
+  <span class="font-serif text-[1.2em] italic">Labs</span>
+</a>

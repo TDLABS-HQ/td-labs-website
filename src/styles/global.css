@@ -49,6 +49,31 @@
   --text-label--letter-spacing: 0.08em;
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Fixed navbar height; use pt-nav on the first section so it clears the bar. */
+  --spacing-nav: 4rem;
+
+  --animate-status-pulse: status-pulse 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-menu-in: menu-in 240ms var(--ease-out-quart);
+
+  @keyframes status-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
 }
 
 @layer base {
@@ -56,6 +81,14 @@
     @apply bg-paper text-ink font-sans antialiased;
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
+    /* Anchor targets land below the fixed navbar. */
+    scroll-padding-top: calc(var(--spacing-nav) + 1rem);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {

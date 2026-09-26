@@ -1,0 +1,17 @@
+---
+/** "● Booking projects for <month>" with a slow pulsing signal dot. */
+import type { HTMLAttributes } from 'astro/types';
+import { site } from '../config/site';
+
+type Props = HTMLAttributes<'p'>;
+
+const { class: className, ...attrs } = Astro.props;
+---
+
+<p class:list={['flex items-center gap-2.5 font-mono text-xs text-muted', className]} {...attrs}>
+  <span class="relative flex size-1.5 shrink-0" aria-hidden="true">
+    <span class="absolute inset-0 rounded-full bg-signal motion-safe:animate-status-pulse"></span>
+    <span class="relative size-1.5 rounded-full bg-signal"></span>
+  </span>
+  <span>Booking projects for {site.bookingMonth}</span>
+</p>

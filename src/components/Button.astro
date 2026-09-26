@@ -1,0 +1,44 @@
+---
+/**
+ * Primary call-to-action link: ink fill, paper text, arrow that nudges on hover.
+ *
+ * <Button href="/start">Start a Project</Button>
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  size?: 'sm' | 'md' | 'lg';
+  /** Trailing arrow; decorative. */
+  arrow?: boolean;
+}
+
+const { size = 'md', arrow = true, class: className, ...attrs } = Astro.props;
+
+const sizes = {
+  sm: 'h-10 px-4 text-sm',
+  md: 'h-12 px-6 text-base',
+  lg: 'h-14 px-6 text-lg',
+};
+---
+
+<a
+  class:list={[
+    'group/btn inline-flex shrink-0 items-center justify-center gap-2 bg-ink font-medium whitespace-nowrap text-paper transition-colors hover:bg-ink/85',
+    sizes[size],
+    className,
+  ]}
+  {...attrs}
+>
+  <slot />
+  {
+    arrow && (
+      <span
+        class="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:text-signal"
+        aria-hidden="true"
+      >
+        →
+      </span>
+    )
+  }
+</a>

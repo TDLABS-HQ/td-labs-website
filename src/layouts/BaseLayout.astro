@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import Navbar from '../components/Navbar.astro';
 import { site } from '../config/site';
 import '../styles/global.css';
 
@@ -84,7 +85,7 @@ const organization = {
     >
       Skip to content
     </a>
-    <slot name="header" />
+    <slot name="header"><Navbar /></slot>
     <main id="main">
       <slot />
     </main>

@@ -1,0 +1,153 @@
+---
+import Button from './Button.astro';
+import StatusLine from './StatusLine.astro';
+import Wordmark from './Wordmark.astro';
+
+// Root-relative so the anchors also work from other pages (e.g. /start).
+const links = [
+  { label: 'Work', href: '/#work' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Process', href: '/#process' },
+  { label: 'FAQ', href: '/#faq' },
+];
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-40 border-b border-transparent transition-colors duration-300 data-scrolled:border-hairline data-scrolled:bg-paper"
+>
+  <nav
+    aria-label="Primary"
+    class="shell flex h-nav items-center justify-between gap-6 xl:grid xl:grid-cols-[1fr_auto_1fr]"
+  >
+    <Wordmark class="justify-self-start" />
+
+    <StatusLine class="hidden xl:flex" />
+
+    <div class="flex items-center gap-6 justify-self-end">
+      <ul class="hidden items-center gap-6 md:flex">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-sm font-medium underline decoration-transparent decoration-1 underline-offset-8 transition-colors hover:decoration-signal"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="hidden md:block">
+        <Button href="/start" size="sm">Start a Project</Button>
+      </div>
+
+      <button
+        type="button"
+        class="-mr-2.5 grid size-11 place-items-center md:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-open
+      >
+        <span class="flex w-5 flex-col gap-1.5" aria-hidden="true">
+          <span class="h-px w-full bg-ink"></span>
+          <span class="h-px w-full bg-ink"></span>
+        </span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<dialog
+  id="mobile-menu"
+  aria-label="Menu"
+  class="m-0 h-dvh max-h-none w-full max-w-none flex-col bg-paper p-0 text-ink backdrop:bg-transparent open:flex motion-safe:open:animate-menu-in md:hidden"
+>
+  <div class="shell flex h-nav shrink-0 items-center justify-between border-b border-hairline">
+    <Wordmark />
+    <button
+      type="button"
+      class="-mr-2.5 grid size-11 place-items-center"
+      aria-label="Close menu"
+      data-menu-close
+    >
+      <span class="relative block size-5" aria-hidden="true">
+        <span class="absolute top-1/2 left-0 h-px w-full rotate-45 bg-ink"></span>
+        <span class="absolute top-1/2 left-0 h-px w-full -rotate-45 bg-ink"></span>
+      </span>
+    </button>
+  </div>
+
+  <nav aria-label="Mobile" class="shell flex-1 overflow-y-auto py-8">
+    <ul>
+      {
+        links.map((link, i) => (
+          <li class="border-b border-hairline">
+            <a href={link.href} class="flex items-baseline gap-4 py-5 text-h2 font-semibold">
+              <span class="label text-muted" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <StatusLine class="mt-8" />
+  </nav>
+
+  <div class="shell shrink-0 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+    <Button href="/start" size="lg" class="w-full">Start a Project</Button>
+  </div>
+</dialog>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const menu = document.getElementById('mobile-menu') as HTMLDialogElement;
+  const openButton = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+  const root = document.documentElement;
+
+  // Transparent at the top; paper + hairline after 8px of scroll.
+  const updateHeader = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+
+  // Mobile menu: <dialog> gives focus trapping, Esc, and an inert background.
+  const onClosed = () => {
+    openButton.setAttribute('aria-expanded', 'false');
+    root.style.overflow = '';
+  };
+
+  const closeMenu = () => {
+    if (!menu.open) return;
+    menu.close();
+    // Unlock scroll now (the close event is async) so anchor links can scroll.
+    onClosed();
+  };
+
+  openButton.addEventListener('click', () => {
+    menu.showModal();
+    openButton.setAttribute('aria-expanded', 'true');
+    root.style.overflow = 'hidden';
+  });
+
+  // Esc and the close button return focus to the hamburger; link taps let
+  // the browser move focus to the anchor target instead.
+  menu.addEventListener('close', () => {
+    const wasOpen = root.style.overflow === 'hidden';
+    onClosed();
+    if (wasOpen) openButton.focus();
+  });
+  menu.querySelector('[data-menu-close]')!.addEventListener('click', () => {
+    closeMenu();
+    openButton.focus();
+  });
+  menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+  // Close if the viewport grows past the mobile breakpoint.
+  window.matchMedia('(min-width: 48rem)').addEventListener('change', (e) => {
+    if (e.matches) closeMenu();
+  });
+</script>

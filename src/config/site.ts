@@ -9,6 +9,8 @@ export const site = {
   description:
     'TD Labs designs and builds websites, business systems, and custom software for startups and small businesses.',
   founder: 'Jericho Bantiquete',
+  // [PLACEHOLDER] Next open booking month, shown in the navbar status line. Update monthly.
+  bookingMonth: 'November 2026',
   country: 'PH',
   locale: 'en_PH',
   ogImage: '/og-default.png',
