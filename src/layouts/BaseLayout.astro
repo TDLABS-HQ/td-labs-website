@@ -1,0 +1,115 @@
+---
+import { Font } from 'astro:assets';
+import { site } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+  /** Page title. Omit on the home page to use "TD Labs — <tagline>". */
+  title?: string;
+  description?: string;
+  /** Path or absolute URL to a 1200×630 image. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  ogImage = site.ogImage,
+  ogImageAlt = site.ogImageAlt,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+const siteUrl = new URL('/', Astro.site).href;
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${siteUrl}#organization`,
+  name: site.name,
+  alternateName: site.legalName,
+  url: siteUrl,
+  logo: new URL('/favicon.svg', Astro.site).href,
+  slogan: site.tagline,
+  description: site.description,
+  founder: { '@type': 'Person', name: site.founder },
+  areaServed: { '@type': 'Country', name: 'Philippines' },
+  address: { '@type': 'PostalAddress', addressCountry: site.country },
+  ...(site.email && { email: site.email }),
+  ...(site.sameAs.length > 0 && { sameAs: site.sameAs }),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#F7F5F0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--ff-inter-tight" preload />
+    <Font cssVariable="--ff-instrument-serif" />
+    <Font cssVariable="--ff-jetbrains-mono" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="label sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
+    >
+      Skip to content
+    </a>
+    <slot name="header" />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="footer" />
+
+    <script>
+      // Fade + translate-up for [data-reveal] elements (styles in global.css).
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+        targets.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>

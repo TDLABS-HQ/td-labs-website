@@ -1,0 +1,55 @@
+---
+// Internal reference for the Lab Notebook tokens. Not linked, not indexed.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+
+const colors = [
+  { name: 'paper', hex: '#F7F5F0', swatch: 'bg-paper' },
+  { name: 'ink', hex: '#141414', swatch: 'bg-ink' },
+  { name: 'muted', hex: '#5C5A55', swatch: 'bg-muted' },
+  { name: 'hairline', hex: '#E4E0D8', swatch: 'bg-hairline' },
+  { name: 'signal', hex: '#FF5B1F', swatch: 'bg-signal' },
+];
+---
+
+<BaseLayout title="Styleguide" noindex>
+  <div class="shell space-y-16 py-16">
+    <section class="space-y-6">
+      <SectionLabel index={0} label="Typography" rule />
+      <h1 class="text-display font-semibold">Where technology meets <em>thoughtful design.</em></h1>
+      <h2 class="text-h2 font-semibold">Section heading with <em>a serif</em> turn</h2>
+      <h3 class="text-h3 font-medium">Card heading</h3>
+      <p class="max-w-prose text-lg text-muted">
+        Body copy in Inter Tight, muted. The quick brown fox jumps over the lazy dog.
+      </p>
+      <p class="label text-ink">Mono label · 2026 · Next.js · Astro</p>
+    </section>
+
+    <section class="space-y-6">
+      <SectionLabel index={1} label="Colors" rule />
+      <ul class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+        {colors.map((c) => (
+          <li class="space-y-2">
+            <div class:list={['aspect-square border border-hairline', c.swatch]} />
+            <p class="label">{c.name} <span class="text-muted">{c.hex}</span></p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="space-y-6">
+      <SectionLabel index={2} label="Section labels" rule />
+      <SectionLabel index={1} label="Selected work" />
+      <SectionLabel index={4} label="Availability" dot />
+    </section>
+
+    <section class="space-y-6">
+      <SectionLabel index={3} label="Grid + reveal" rule />
+      <div class="bg-grid grid h-64 place-items-center border border-hairline" data-reveal>
+        <a href="#" class="bg-ink px-6 py-4 font-medium text-paper transition-colors hover:bg-muted">
+          Start a Project
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

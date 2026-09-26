@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/*
+ * THE LAB NOTEBOOK — design tokens
+ *
+ * Colors
+ *   paper     #F7F5F0  background
+ *   ink       #141414  text, primary buttons        (16.9:1 on paper)
+ *   muted     #5C5A55  secondary text               (6.3:1 on paper)
+ *   hairline  #E4E0D8  1px rules and grid lines     (decorative only)
+ *   signal    #FF5B1F  accent — dots, highlights, hover details.
+ *                      2.85:1 on paper: never use for text or large fills.
+ *
+ * Fonts (loaded by Astro's Fonts API, see astro.config.mjs)
+ *   font-sans   Inter Tight       headlines + body
+ *   font-serif  Instrument Serif  italic, 1–3 words per headline ("design voice")
+ *   font-mono   JetBrains Mono    labels, numbers, tags, metadata ("technology voice")
+ */
+
+@theme inline {
+  --font-sans: var(--ff-inter-tight);
+  --font-serif: var(--ff-instrument-serif);
+  --font-mono: var(--ff-jetbrains-mono);
+}
+
+@theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-paper: #f7f5f0;
+  --color-ink: #141414;
+  --color-muted: #5c5a55;
+  --color-hairline: #e4e0d8;
+  --color-signal: #ff5b1f;
+
+  /* Display sizes scale fluidly from phone to desktop. */
+  --text-display: clamp(2.75rem, 1.6rem + 5.6vw, 6rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.04em;
+  --text-h2: clamp(2rem, 1.4rem + 3vw, 3.75rem);
+  --text-h2--line-height: 1;
+  --text-h2--letter-spacing: -0.035em;
+  --text-h3: clamp(1.375rem, 1.15rem + 1vw, 1.875rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.02em;
+  /* Mono labels: small uppercase specimen-tag text. */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html {
+    @apply bg-paper text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-dvh;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+
+  /* Visible, high-contrast focus for keyboard users (signal fails 3:1, so ink). */
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-ink;
+  }
+
+  /* The design voice: serif italic inside headlines, e.g. <h2>Built with <em>care</em></h2> */
+  :is(h1, h2, h3) em {
+    @apply font-serif font-normal italic tracking-normal;
+  }
+}
+
+/* Centered page column with mobile-first gutters. */
+@utility shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Technology voice: mono, small, uppercase. */
+@utility label {
+  @apply font-mono text-label uppercase;
+}
+
+/* Graph-paper background: faint 1px hairlines on a 32px grid. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+/* Hairline rule, used between sections and in lists. */
+@utility rule {
+  @apply border-t border-hairline;
+}
+
+/*
+ * Scroll reveal: add data-reveal to an element; BaseLayout observes it.
+ * Only hidden when JS is running and the user allows motion, so content
+ * is never lost to a failed script. Stagger with style="--reveal-delay: 80ms".
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 600ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-quart);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}

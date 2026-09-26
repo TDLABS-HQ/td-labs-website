@@ -1,0 +1,31 @@
+---
+/**
+ * Specimen-tag section label, e.g. "TD—01 / SELECTED WORK".
+ *
+ * <SectionLabel index={1} label="Selected work" />
+ * <SectionLabel index={4} label="Availability" dot rule />
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'p'> {
+  /** Section number, zero-padded to two digits. */
+  index: number;
+  /** Section name; rendered uppercase. */
+  label: string;
+  /** Show the signal-orange status dot before the tag. */
+  dot?: boolean;
+  /** Extend a hairline rule to the right edge of the container. */
+  rule?: boolean;
+}
+
+const { index, label, dot = false, rule = false, class: className, ...attrs } = Astro.props;
+const code = `TD—${String(index).padStart(2, '0')}`;
+---
+
+<p class:list={['label flex items-center gap-3 text-muted', className]} {...attrs}>
+  {dot && <span class="size-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />}
+  <span class="whitespace-nowrap">
+    <span aria-hidden="true"><span class="text-ink">{code}</span> / </span>{label}
+  </span>
+  {rule && <span class="h-px flex-1 bg-hairline" aria-hidden="true" />}
+</p>
