@@ -1,0 +1,149 @@
+---
+import { Image } from 'astro:assets';
+import Button from '../Button.astro';
+import SectionLabel from '../SectionLabel.astro';
+
+/*
+ * [PLACEHOLDER screenshot] To use the real featured project:
+ *   1. Save it as src/assets/hero/featured.png (any aspect ratio works)
+ *   2. import featured from '../../assets/hero/featured.png';
+ *   3. const screenshot = { src: featured, alt: 'Describe what the screenshot shows' };
+ * Then adjust each note's x/y (percent of the screenshot) to point at the right spot.
+ */
+const screenshot = null as { src: ImageMetadata; alt: string } | null;
+
+const notes = [
+  { text: '→ Orders paid via GCash', x: 34, y: 22 },
+  { text: '→ Mobile-first menu', x: 62, y: 46 },
+  { text: '→ Owner updates prices in seconds', x: 44, y: 70 },
+];
+
+const industries = ['RESTAURANTS', 'CLINICS', 'HOTELS', 'RETAIL', 'STARTUPS'];
+---
+
+<section aria-labelledby="hero-heading" class="relative overflow-x-clip border-b border-hairline pt-nav">
+  <div
+    class="shell grid gap-14 pt-10 pb-16 sm:pt-16 sm:pb-20 lg:grid-cols-12 lg:items-center lg:gap-8 lg:pt-20 lg:pb-28"
+  >
+    <div class="lg:col-span-6">
+      <SectionLabel index={0} label="Technology & Design Labs" />
+
+      <h1
+        id="hero-heading"
+        class="mt-6 text-display font-semibold text-balance lg:text-[4rem] xl:text-[4.75rem]"
+      >
+        We design and build the software your business <em>runs on.</em>
+      </h1>
+
+      <p class="mt-6 max-w-xl text-lg text-pretty text-muted sm:text-xl">
+        Websites, booking systems, and custom business tools for startups and small businesses —
+        thoughtfully designed, properly engineered, and built around how you actually work.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
+        <Button href="/start">Start a Project</Button>
+        <a
+          href="#work"
+          class="group/link inline-flex items-center gap-1.5 py-2 font-medium"
+        >
+          <span
+            class="underline decoration-hairline decoration-1 underline-offset-8 transition-colors group-hover/link:decoration-signal"
+            >See our work</span
+          >
+          <span
+            class="inline-block transition-transform duration-200 group-hover/link:translate-y-0.5"
+            aria-hidden="true">↓</span
+          >
+        </a>
+      </div>
+
+      <ul class="label mt-12 flex flex-wrap gap-x-3 gap-y-2 text-muted" aria-label="Industries we work with">
+        {
+          industries.map((industry, i) => (
+            <li class="flex gap-x-3">
+              {industry}
+              {i < industries.length - 1 && <span aria-hidden="true">·</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- Lab specimen: featured project in a browser frame with notebook annotations. -->
+    <figure class="max-w-xl lg:col-span-6 lg:max-w-none lg:pr-40 xl:pr-44">
+      <div class="border border-ink bg-paper">
+        <div class="flex h-8 items-center gap-3 border-b border-ink px-3" aria-hidden="true">
+          <span class="flex gap-1.5">
+            <span class="size-2 rounded-full border border-ink/40"></span>
+            <span class="size-2 rounded-full border border-ink/40"></span>
+            <span class="size-2 rounded-full border border-ink/40"></span>
+          </span>
+          <span class="h-4 flex-1 border border-hairline"></span>
+        </div>
+
+        <div class:list={['relative', !screenshot && 'aspect-[4/3]']}>
+          {
+            screenshot ? (
+              <Image
+                src={screenshot.src}
+                alt={screenshot.alt}
+                widths={[480, 720, 960, 1280]}
+                sizes="(min-width: 1280px) 420px, (min-width: 1024px) 34vw, 100vw"
+                loading="eager"
+                class="block h-auto w-full"
+              />
+            ) : (
+              <div class="bg-grid absolute inset-0 flex items-end p-3">
+                <p class="label bg-paper px-2 py-1 text-muted">[PLACEHOLDER screenshot]</p>
+              </div>
+            )
+          }
+
+          <!-- Markers; on lg+ each extends a leader line to its note in the right gutter. -->
+          {
+            notes.map((note, i) => (
+              <div
+                class="absolute flex -translate-y-1/2 items-center lg:-right-40 xl:-right-44"
+                style={`left: ${note.x}%; top: ${note.y}%;`}
+                aria-hidden="true"
+              >
+                <span class="-ml-2.5 grid size-5 shrink-0 place-items-center rounded-full bg-ink font-mono text-[10px] text-paper ring-4 ring-paper">
+                  {i + 1}
+                </span>
+                <span
+                  class="hidden h-px flex-1 origin-left bg-ink motion-safe:animate-draw lg:block"
+                  style={`animation-delay: ${300 + i * 150}ms;`}
+                />
+                <span
+                  class="hidden w-36 shrink-0 pl-3 font-mono text-xs leading-snug motion-safe:animate-fade-in lg:block xl:w-40"
+                  style={`animation-delay: ${650 + i * 150}ms;`}
+                >
+                  {note.text}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Key for the numbered markers: visible on small screens, read by screen readers everywhere. -->
+      <figcaption class="mt-5 lg:sr-only">
+        <ol class="grid gap-2 font-mono text-xs">
+          {
+            notes.map((note, i) => (
+              <li class="flex items-center gap-3">
+                <span
+                  class="grid size-5 shrink-0 place-items-center rounded-full bg-ink text-[10px] text-paper"
+                  aria-hidden="true"
+                >
+                  {i + 1}
+                </span>
+                {note.text}
+              </li>
+            ))
+          }
+        </ol>
+      </figcaption>
+    </figure>
+  </div>
+</section>
