@@ -1,0 +1,95 @@
+---
+import DotList from '../DotList.astro';
+import SectionLabel from '../SectionLabel.astro';
+
+// [PLACEHOLDER] Bracketed prices are unconfirmed; replace once pricing is final.
+// `slug` pre-selects the service on the /start form.
+const services = [
+  {
+    slug: 'business-website',
+    title: 'Business Websites',
+    description: 'A website that brings in bookings, orders, and inquiries — not just compliments.',
+    typicalFor: ['RESTAURANTS', 'CLINICS', 'SALONS', 'HOTELS'],
+    price: 'From ₱[15,000]',
+  },
+  {
+    slug: 'business-system',
+    title: 'Business Systems',
+    description:
+      'Booking, ordering, inventory, staff, and hotel management — the software that runs your day-to-day.',
+    typicalFor: ['GROWING SMEs'],
+    price: 'From ₱[35,000]',
+  },
+  {
+    slug: 'product-mvp',
+    title: 'Product Design & MVPs',
+    description:
+      'For founders: we turn your idea into designed screens and a working first version you can put in front of real users.',
+    typicalFor: ['STARTUPS', 'FOUNDERS'],
+    price: 'From ₱[__]',
+  },
+  {
+    slug: 'integrations',
+    title: 'Integrations & Custom Tools',
+    description:
+      "GCash and card payments, SMS, dashboards, and connections to the tools you already use. If there's no off-the-shelf fix, we build one.",
+    typicalFor: ['ANY BUSINESS'],
+    price: 'Custom quote',
+  },
+];
+---
+
+<section id="services" aria-labelledby="services-heading" class="overflow-x-clip border-b border-hairline py-20 sm:py-28">
+  <div class="shell">
+    <div data-reveal>
+      <SectionLabel index={2} label="Services" rule />
+      <h2 id="services-heading" class="mt-6 text-h2 font-semibold">What we <em>build.</em></h2>
+    </div>
+
+    <!-- An index, not cards: each whole row links to /start with the service pre-selected. -->
+    <ol class="mt-12 border-b border-hairline sm:mt-16">
+      {
+        services.map((service, i) => (
+          <li
+            class="group/row relative border-t border-hairline"
+            data-reveal
+            style={`--reveal-delay: ${i * 60}ms`}
+          >
+            <div class="grid gap-4 py-8 transition-transform duration-300 ease-out-quart group-hover/row:motion-safe:translate-x-2 sm:py-10 lg:grid-cols-12 lg:gap-8">
+              <span class="label pt-1 text-muted lg:col-span-1 lg:pt-2.5" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+
+              <h3 class="text-h3 font-semibold lg:col-span-4">
+                <a
+                  href={`/start?service=${service.slug}`}
+                  class="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
+                >
+                  {service.title}
+                </a>
+              </h3>
+
+              <div class="lg:col-span-5">
+                <p class="max-w-xl text-pretty text-muted sm:text-lg">{service.description}</p>
+                <div class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-2">
+                  <span class="label text-muted">Typical for:</span>
+                  <DotList items={service.typicalFor} class="text-ink" />
+                </div>
+              </div>
+
+              <p class="mt-2 flex items-baseline justify-between gap-4 font-mono text-sm text-ink lg:col-span-2 lg:mt-0 lg:flex-col lg:items-end lg:justify-start lg:pt-2.5 lg:text-right">
+                {service.price}
+                <span
+                  class="text-lg leading-none text-signal transition-[opacity,translate] duration-300 ease-out-quart pointer-fine:opacity-0 pointer-fine:group-hover/row:opacity-100 pointer-fine:group-focus-within/row:opacity-100 motion-safe:pointer-fine:-translate-x-2 motion-safe:pointer-fine:group-hover/row:translate-x-0"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

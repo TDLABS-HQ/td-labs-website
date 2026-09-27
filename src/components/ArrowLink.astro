@@ -1,0 +1,35 @@
+---
+/**
+ * Text link with a hairline underline that turns signal on hover, and an arrow
+ * that nudges in its direction. The arrow is hidden from screen readers.
+ *
+ * <ArrowLink href="#work" arrow="↓">See our work</ArrowLink>
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  arrow?: '→' | '↓' | '←';
+  /** Extra context for screen readers when the visible text repeats, e.g. the project name. */
+  srSuffix?: string;
+}
+
+const { arrow = '→', srSuffix, class: className, ...attrs } = Astro.props;
+
+const nudge = {
+  '→': 'group-hover/link:translate-x-0.5',
+  '↓': 'group-hover/link:translate-y-0.5',
+  '←': 'group-hover/link:-translate-x-0.5',
+};
+const arrowClass = ['inline-block transition-transform duration-200', nudge[arrow]];
+const leading = arrow === '←';
+---
+
+<a class:list={['group/link inline-flex items-center gap-1.5 py-2 font-medium', className]} {...attrs}>
+  {leading && <span class:list={arrowClass} aria-hidden="true">{arrow}</span>}
+  <span
+    class="underline decoration-hairline decoration-1 underline-offset-8 transition-colors group-hover/link:decoration-signal"
+    ><slot />{srSuffix && <span class="sr-only">: {srSuffix}</span>}</span
+  >
+  {!leading && <span class:list={arrowClass} aria-hidden="true">{arrow}</span>}
+</a>

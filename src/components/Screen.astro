@@ -1,0 +1,48 @@
+---
+/**
+ * A screenshot via astro:assets, or a graph-paper [PLACEHOLDER] of the given
+ * aspect ratio when no image is supplied yet.
+ */
+import { Image } from 'astro:assets';
+
+interface Props {
+  image?: { src: ImageMetadata; alt: string };
+  /** Aspect ratio class for the placeholder, e.g. "aspect-[16/10]". */
+  aspect?: string;
+  /** Also crop real images to `aspect` (top-aligned) instead of their natural ratio. */
+  crop?: boolean;
+  placeholder?: string;
+  sizes: string;
+  widths?: number[];
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  image,
+  aspect = 'aspect-[16/10]',
+  crop = false,
+  placeholder = '[PLACEHOLDER screenshot]',
+  sizes,
+  widths = [360, 640, 960, 1280, 1920],
+  loading = 'lazy',
+} = Astro.props;
+---
+
+{
+  image ? (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      widths={widths.filter((w) => w <= image.src.width)}
+      sizes={sizes}
+      loading={loading}
+      class:list={['block w-full', crop ? [aspect, 'object-cover object-top'] : 'h-auto']}
+    />
+  ) : (
+    <div class:list={['bg-grid flex items-end p-2 sm:p-3', aspect]}>
+      <p class="bg-paper px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-muted uppercase sm:text-xs">
+        {placeholder}
+      </p>
+    </div>
+  )
+}

@@ -1,0 +1,17 @@
+---
+/** Minimal phone outline around a mobile screen. Content goes in the default slot. */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'div'>;
+
+const { class: className, ...attrs } = Astro.props;
+---
+
+<div class:list={['rounded-[1.25rem] border border-ink bg-paper p-1.5', className]} {...attrs}>
+  <div class="relative overflow-hidden rounded-[0.875rem] border border-hairline">
+    <span
+      class="absolute top-1.5 left-1/2 z-10 h-1 w-1/4 -translate-x-1/2 rounded-full bg-ink"
+      aria-hidden="true"></span>
+    <slot />
+  </div>
+</div>

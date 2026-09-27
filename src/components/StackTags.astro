@@ -1,0 +1,19 @@
+---
+/** Tech stack as mono tags. */
+interface Props {
+  stack: string[];
+  class?: string;
+}
+
+const { stack, class: className } = Astro.props;
+---
+
+{
+  stack.length > 0 && (
+    <ul class:list={['flex flex-wrap gap-2', className]} aria-label="Stack">
+      {stack.map((tech) => (
+        <li class="label border border-hairline px-2 py-1 text-ink">{tech}</li>
+      ))}
+    </ul>
+  )
+}

@@ -1,0 +1,21 @@
+---
+/** Inline mono list separated by "·", e.g. RESTAURANTS · CLINICS · HOTELS. */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'ul'> {
+  items: string[];
+}
+
+const { items, class: className, ...attrs } = Astro.props;
+---
+
+<ul class:list={['label flex flex-wrap gap-x-3 gap-y-2', className]} {...attrs}>
+  {
+    items.map((item, i) => (
+      <li class="flex gap-x-3">
+        {item}
+        {i < items.length - 1 && <span aria-hidden="true">·</span>}
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,9 @@
+---
+/** Honesty marker for work that isn't paid client work. */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class:list={['label inline-block border border-ink px-2 py-1 text-ink', className]}>Concept project</span>
