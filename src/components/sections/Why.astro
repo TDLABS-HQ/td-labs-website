@@ -1,0 +1,92 @@
+---
+import Screen from '../Screen.astro';
+import SectionLabel from '../SectionLabel.astro';
+import { site } from '../../config/site';
+
+/*
+ * [PLACEHOLDER founder photo] To use the real photo:
+ *   1. Save it as src/assets/founder.jpg (portrait works best; it's cropped to 4:5)
+ *   2. import founder from '../../assets/founder.jpg';
+ *   3. const photo = { src: founder, alt: 'Jericho Bantiquete' };
+ */
+const photo = null as { src: ImageMetadata; alt: string } | null;
+
+const points = [
+  {
+    title: 'Direct line to the builder',
+    body: 'Questions get answered by the person who actually knows your code.',
+  },
+  {
+    title: 'Designed and engineered together',
+    body: 'Design and development happen in one place, so what you approve is what you get.',
+  },
+  {
+    title: 'Built around your business',
+    body: 'We start with how your business works, not with a template.',
+  },
+  {
+    title: 'You own everything',
+    body: 'Code, design files, domain, and accounts — all yours, documented and handed over.',
+  },
+];
+---
+
+<section id="why" aria-labelledby="why-heading" class="border-b border-hairline py-20 sm:py-28">
+  <div class="shell">
+    <div data-reveal>
+      <SectionLabel index={3} label="Why TD Labs" rule />
+      <h2 id="why-heading" class="mt-6 text-h2 font-semibold">Small studio. <em>Full attention.</em></h2>
+      <p class="mt-6 max-w-2xl text-lg text-pretty text-muted sm:text-xl">
+        TD Labs is intentionally small. You work directly with the person designing and building your
+        project — no handoffs, no junior teams, no waiting in a queue.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-10 sm:mt-16 lg:grid-cols-12 lg:gap-8">
+      <!-- 2×2 grid drawn with hairlines, like graph paper. -->
+      <ol class="grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:col-span-8">
+        {
+          points.map((point, i) => (
+            <li class="flex flex-col bg-paper p-6 sm:p-8" data-reveal style={`--reveal-delay: ${i * 60}ms`}>
+              <span class="label text-muted" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-6 text-xl font-semibold tracking-tight sm:mt-auto sm:pt-10">{point.title}</h3>
+              <p class="mt-2 text-pretty text-muted">{point.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <figure
+        class="grid gap-6 self-start border border-ink p-5 sm:grid-cols-[minmax(0,14rem)_1fr] sm:p-6 lg:col-span-4 lg:grid-cols-1"
+        data-reveal
+        style="--reveal-delay: 120ms"
+      >
+        <div class="border border-hairline">
+          <Screen
+            image={photo ?? undefined}
+            aspect="aspect-[4/5]"
+            crop
+            placeholder="[PLACEHOLDER founder photo]"
+            sizes="(min-width: 1024px) 360px, (min-width: 640px) 224px, 90vw"
+            widths={[240, 360, 480, 720]}
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <figcaption>
+            <span class="font-semibold">{site.founder}</span>
+            <span class="text-muted"> — Founder, designer &amp; developer</span>
+          </figcaption>
+          <blockquote class="mt-4 border-l border-signal pl-4 text-lg text-pretty">
+            <p>
+              I started TD Labs because good software shouldn't only be for big companies. Every project we
+              take on gets my full attention, from the first call to launch.
+            </p>
+          </blockquote>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
